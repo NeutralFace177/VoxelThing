@@ -153,7 +153,7 @@ public class World implements IBlockAccess {
 						} else if (yy < 0) {
 							block = Block.WATER;
 						}
-						
+	
 					}
 
 					if (block != null) {
@@ -250,20 +250,23 @@ public class World implements IBlockAccess {
 	}
 
 	public void onBlockUpdate(int x, int y, int z) {
-		
 		if (getBlock(x, y, z) == Block.WATER && getBlock(x, y-1, z) == null) {
 			setBlock(x, y-1, z, Block.WATER);
-		}
-		for (int ux = -1; ux < 2; ux++) {
-			for (int uy = -1; uy < 2; uy++) {
-				for (int uz = -1; uz < 2; uz++) {
-					onBlockUpdate(ux, uy, uz);
+			for (int ux = -1; ux < 2; ux++) {
+				for (int uy = -1; uy < 2; uy++) {
+					for (int uz = -1; uz < 2; uz++) {
+						onBlockUpdate(x + ux, y + uy, z + uz);
+					}
 				}
-			}
+			} 
 		}
+
 	}
 
+	
+
 	public void onChunkAdded(int x, int y, int z) {
+		onBlockUpdate(x, y, z);
 	}
 
 	public void close() {
