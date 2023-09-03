@@ -18,6 +18,8 @@ public class GenerationInfo {
 	private final long cliffSeed;
 	private final long cliffHeightSeed;
 	private final long caveSeed;
+	private final long biomeSeed;
+	private final long secondBiomeSeed;
 
 	private final float[] height = new float[Chunk.AREA];
 	private final float[] caveInfo = new float[LERP_MAP_SIZE];
@@ -33,6 +35,8 @@ public class GenerationInfo {
 		cliffSeed = splitMix();
 		cliffHeightSeed = splitMix();
 		caveSeed = splitMix();
+		biomeSeed = splitMix();
+		secondBiomeSeed = splitMix();
 
 		chunkX = cx;
 		chunkZ = cz;
@@ -64,6 +68,7 @@ public class GenerationInfo {
 		final float cliffHeightMin = 2.0f;
 		final float cliffHeightMax = 8.0f;
 
+
 		final long seed = splitMix();
 
 		for (int x = 0; x < Chunk.LENGTH; x++) {
@@ -76,7 +81,6 @@ public class GenerationInfo {
 				hill = 1.0f - (float) Math.sin(MathUtil.threshold(hill, hillThresholdMin, hillThresholdMax) * MathUtil.PI_F / 2.0f);
 
 				float s = OpenSimplex2Octaves.noise2(seed, 2, xx / baseScale, zz / baseScale);
-
 
 				if (type == 3) {
 					baseHeight = MathUtil.floorMod(baseHeight, s);
@@ -105,9 +109,19 @@ public class GenerationInfo {
 
 				height[x + z * Chunk.LENGTH] = baseHeight;
 			}
-		}
+		}      
 	}
 
+	public float biome(int x, int z) {
+		float scale = 50;
+		float xx = x * scale;
+		float zz = z * scale;
+
+		float seedX = xx + (OpenSimplex2Octaves.noise2(biomeSeed, 1, xx, zz) * (scale /2));
+		float seedZ = zz + (OpenSimplex2Octaves.noise2(secondBiomeSeed, 1, xx, zz) * (scale/2));
+
+		return 1f;
+	}
 
 	private long splitMix() {
 		long z = (randSeed += 0x9e3779b97f4a7c15L);

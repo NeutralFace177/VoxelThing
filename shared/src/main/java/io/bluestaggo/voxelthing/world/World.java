@@ -159,7 +159,24 @@ public class World implements IBlockAccess {
 						} else if (yy < waterLevel && worldType == 1) {
 							block = Block.WATER;
 						}
-	
+						
+					/* 	if (yy < 40) {
+							float b = genInfo.biome(x, z)[1];
+							float a = genInfo.biome(x, z)[0];
+							if (a > 0.4) {
+								block = Block.WOOL[1];
+							} else {
+								block = Block.WOOL[3];
+							}
+							if (b > 0.4) {
+								block = Block.WOOL[2];
+							} else {
+								block = Block.WOOL[Block.WOOL.length-1];
+							}
+						}
+	*/
+						
+						
 					}
 
 					if (block != null) {
