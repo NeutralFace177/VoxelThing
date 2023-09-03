@@ -125,12 +125,12 @@ public class Game {
 		window.destroy();
 	}
 
-	public void startWorld() {
+	public void startWorld(int type) {
 		if (world != null) {
 			world.close();
 		}
 
-		world = new ClientWorld(this);
+		world = new ClientWorld(this, type);
 		playerController = new ClientPlayerController(this);
 		player = new Player(world, playerController);
 	}

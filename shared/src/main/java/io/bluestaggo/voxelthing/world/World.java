@@ -20,11 +20,14 @@ public class World implements IBlockAccess {
 	public final Random random = new Random();
 	public final long seed = random.nextLong();
 
+	public int worldType = 1;
+
 	public double partialTick;
 
-	public World() {
+	public World(int type) {
 		chunkStorage = new ChunkStorage(this);
 		genCache = new GenCache(this);
+		worldType = type;
 	}
 
 	protected void debugChunk() {
@@ -114,7 +117,7 @@ public class World implements IBlockAccess {
 		Chunk chunk = chunkStorage.newChunkAt(cx, cy, cz);
 		GenerationInfo genInfo = genCache.getGenerationAt(cx, cz);
 
-		genInfo.generate();
+		genInfo.generate(worldType);
 
 		for (int x = 0; x < Chunk.LENGTH; x++) {
 			for (int z = 0; z < Chunk.LENGTH; z++) {
@@ -124,7 +127,7 @@ public class World implements IBlockAccess {
 					int yy = cy * Chunk.LENGTH + y;
 					boolean cave = yy < height && genInfo.getCave(x, yy, z);
 					Block block = null;
-
+					int waterLevel = worldType < 2 ? 0 : 2;
 					if (!cave) {
 						if (yy < height - 4) {
 							block = Block.STONE;
@@ -137,7 +140,7 @@ public class World implements IBlockAccess {
 									block = Block.SNOW;
 								}
 							}
-						} else if (yy < height && yy > 0 && yy < 23) {
+						} else if (yy < height && yy > waterLevel && yy < 23) {
 							block = Block.GRASS;
 							if (yy > 18) {
 								if (Math.random() > 0.5) {
@@ -146,11 +149,11 @@ public class World implements IBlockAccess {
 									block = Block.SNOW;
 								}
 							}
-						} else if (yy < height && yy < 0) {
+						} else if (yy < height && yy < waterLevel) {
 							block = Block.SAND;
 						} else if (yy < height && yy > 22) {
 							block = Block.SNOW;
-						} else if (yy < 0) {
+						} else if (yy < waterLevel) {
 							block = Block.WATER;
 						}
 	

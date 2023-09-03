@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class ClientWorld extends World {
 	public final Game game;
 
-	public ClientWorld(Game game) {
-		super();
+	public ClientWorld(Game game, int type) {
+		super(type);
 		this.game = game;
 		game.renderer.worldRenderer.setWorld(this);
 		game.renderer.worldRenderer.loadRenderers();

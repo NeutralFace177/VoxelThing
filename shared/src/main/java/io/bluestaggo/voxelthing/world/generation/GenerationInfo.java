@@ -38,7 +38,7 @@ public class GenerationInfo {
 		chunkZ = cz;
 	}
 
-	public void generate() {
+	public void generate(int type) {
 		if (hasGenerated) {
 			return;
 		}
@@ -64,6 +64,8 @@ public class GenerationInfo {
 		final float cliffHeightMin = 2.0f;
 		final float cliffHeightMax = 8.0f;
 
+		final long seed = splitMix();
+
 		for (int x = 0; x < Chunk.LENGTH; x++) {
 			for (int z = 0; z < Chunk.LENGTH; z++) {
 				int xx = (chunkX * Chunk.LENGTH + x);
@@ -72,6 +74,15 @@ public class GenerationInfo {
 				float baseHeight = OpenSimplex2Octaves.noise2(baseSeed, baseOctaves, xx / baseScale, zz / baseScale);
 				float hill = OpenSimplex2Octaves.noise2(hillSeed, hillOctaves, xx / hillScale, zz / hillScale);
 				hill = 1.0f - (float) Math.sin(MathUtil.threshold(hill, hillThresholdMin, hillThresholdMax) * MathUtil.PI_F / 2.0f);
+
+				float s = OpenSimplex2Octaves.noise2(seed, 2, xx / baseScale, zz / baseScale);
+
+				if (type == 2) {
+					baseHeight = MathUtil.floorMod(baseHeight, s);
+					hill = MathUtil.floorMod(hill, s);
+				}
+
+				
 
 				float addedBaseHeight = baseHeightScale * MathUtil.lerp(2.5f, hillHeightScaleMod, hill);
 				baseHeight = baseHeight * addedBaseHeight + hill * hillHeightScale;
