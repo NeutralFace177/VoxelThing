@@ -121,7 +121,7 @@ public class MainRenderer {
 			useSkyTexture(1);
 			worldRenderer.draw();
 
-			//state.disable(GL_CULL_FACE);
+			state.disable(GL_CULL_FACE);
 		
 
 			String skin = game.getSkin();

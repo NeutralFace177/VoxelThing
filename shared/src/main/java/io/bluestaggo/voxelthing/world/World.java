@@ -30,6 +30,9 @@ public class World implements IBlockAccess {
 		worldType = type;
 	}
 
+	int d = 0;
+
+
 	protected void debugChunk() {
 		int range = 1 << ChunkStorage.RADIUS_POW2 >> 1;
 		for (int x = -range; x <= range; x++) {
@@ -127,12 +130,14 @@ public class World implements IBlockAccess {
 					int yy = cy * Chunk.LENGTH + y;
 					boolean cave = yy < height && genInfo.getCave(x, yy, z);
 					Block block = null;
+					//increase water level for chaotic world
 					int waterLevel = worldType == 1 ? 0 : 2;
 					if (!cave) {
 						if (yy < height - 4) {
 							block = Block.STONE;
 						} else if (yy < height - 1 && yy < 23) {
 							block = Block.DIRT;
+							//blends grass -> snow
 							if (yy > 18) {
 								if (Math.random() > 0.5) {
 									block = Block.DIRT;
@@ -142,6 +147,7 @@ public class World implements IBlockAccess {
 							}
 						} else if (yy < height && yy > waterLevel && yy < 23) {
 							block = Block.GRASS;
+							//blends grass -> snow
 							if (yy > 18) {
 								if (Math.random() > 0.5) {
 									block = Block.GRASS;
@@ -253,17 +259,24 @@ public class World implements IBlockAccess {
 	}
 
 	public void onBlockUpdate(int x, int y, int z) {
-		if (getBlock(x, y, z) == Block.WATER && getBlock(x, y-1, z) == null) {
-			setBlock(x, y-1, z, Block.WATER);
-			for (int ux = -1; ux < 2; ux++) {
-				for (int uy = -1; uy < 2; uy++) {
-					for (int uz = -1; uz < 2; uz++) {
-						onBlockUpdate(x + ux, y + uy, z + uz);
+		if (d < 100) {
+			d++;
+		} 
+		if (d >= 100) {
+			if (getBlock(x, y, z) == Block.WATER && getBlock(x, y-1, z) == null) {
+						setBlock(x, y-1, z, Block.WATER);
+						// terrible updates blocks around it
+						for (int ux = -1; ux < 2; ux++) {
+							for (int uy = -1; uy < 2; uy++) {
+								for (int uz = -1; uz < 2; uz++) {
+									onBlockUpdate(x + ux, y + uy, z + uz);
+								}
+							}
+						} 
 					}
-				}
-			} 
+			d = 0;
 		}
-
+		
 	}
 
 	
