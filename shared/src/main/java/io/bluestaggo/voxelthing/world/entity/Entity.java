@@ -3,6 +3,7 @@ package io.bluestaggo.voxelthing.world.entity;
 import io.bluestaggo.voxelthing.math.AABB;
 import io.bluestaggo.voxelthing.math.MathUtil;
 import io.bluestaggo.voxelthing.world.World;
+import io.bluestaggo.voxelthing.world.block.Block;
 
 import java.util.List;
 
@@ -39,6 +40,9 @@ public class Entity {
 	public boolean onGround;
 	public boolean noClip;
 	protected boolean hasGravity = true;
+
+	public double speed = 1;
+	public boolean inWater = false;
 
 	public Entity(World world) {
 		this.world = world;
@@ -96,6 +100,15 @@ public class Entity {
 			onGround = oldVelY < 0.0 && oldVelY < velY;
 		} else {
 			onGround = true;
+		}
+		
+		if (world.getBlock((int)posX,(int)posY,(int)posZ) == Block.WATER) {
+			onGround = true;
+			speed = 0.25;
+			inWater = true;
+		} else {
+			speed = 1;
+			inWater = false;
 		}
 
 		posX += velX;

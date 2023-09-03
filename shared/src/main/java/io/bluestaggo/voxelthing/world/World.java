@@ -49,6 +49,7 @@ public class World implements IBlockAccess {
 								if (random.nextInt(2) == 0) {
 									block = null;
 								}
+								
 							}
 							chunk.setBlock(xx, yy, zz, block);
 						}
@@ -118,7 +119,7 @@ public class World implements IBlockAccess {
 		for (int x = 0; x < Chunk.LENGTH; x++) {
 			for (int z = 0; z < Chunk.LENGTH; z++) {
 				float height = genInfo.getHeight(x, z);
-
+				
 				for (int y = 0; y < Chunk.LENGTH; y++) {
 					int yy = cy * Chunk.LENGTH + y;
 					boolean cave = yy < height && genInfo.getCave(x, yy, z);
@@ -127,11 +128,32 @@ public class World implements IBlockAccess {
 					if (!cave) {
 						if (yy < height - 4) {
 							block = Block.STONE;
-						} else if (yy < height - 1) {
+						} else if (yy < height - 1 && yy < 23) {
 							block = Block.DIRT;
-						} else if (yy < height) {
+							if (yy > 18) {
+								if (Math.random() > 0.5) {
+									block = Block.DIRT;
+								} else {
+									block = Block.SNOW;
+								}
+							}
+						} else if (yy < height && yy > 0 && yy < 23) {
 							block = Block.GRASS;
+							if (yy > 18) {
+								if (Math.random() > 0.5) {
+									block = Block.GRASS;
+								} else {
+									block = Block.SNOW;
+								}
+							}
+						} else if (yy < height && yy < 0) {
+							block = Block.SAND;
+						} else if (yy < height && yy > 22) {
+							block = Block.SNOW;
+						} else if (yy < 0) {
+							block = Block.WATER;
 						}
+						
 					}
 
 					if (block != null) {
@@ -187,7 +209,7 @@ public class World implements IBlockAccess {
 			for (int y = minY; y < maxY; y++) {
 				for (int z = minZ; z < maxZ; z++) {
 					Block block = getBlock(x, y, z);
-					if (block != null) {
+					if (block != null && block != Block.WATER) {
 						boxes.add(block.getCollisionBox(x, y, z));
 					}
 				}
@@ -228,6 +250,17 @@ public class World implements IBlockAccess {
 	}
 
 	public void onBlockUpdate(int x, int y, int z) {
+		
+		if (getBlock(x, y, z) == Block.WATER && getBlock(x, y-1, z) == null) {
+			setBlock(x, y-1, z, Block.WATER);
+		}
+		for (int ux = -1; ux < 2; ux++) {
+			for (int uy = -1; uy < 2; uy++) {
+				for (int uz = -1; uz < 2; uz++) {
+					onBlockUpdate(ux, uy, uz);
+				}
+			}
+		}
 	}
 
 	public void onChunkAdded(int x, int y, int z) {

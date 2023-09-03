@@ -103,7 +103,10 @@ public class MainRenderer {
 		try (var state = new GLState()) {
 			state.enable(GL_CULL_FACE);
 			state.enable(GL_DEPTH_TEST);
-			glCullFace(GL_FRONT);
+			
+			glCullFace(GL_FRONT_AND_BACK);
+			
+			//glEnable(GL_BLEND);
 
 			setupSkyShader(view, proj);
 			Texture.stop();
@@ -118,7 +121,8 @@ public class MainRenderer {
 			useSkyTexture(1);
 			worldRenderer.draw();
 
-			state.disable(GL_CULL_FACE);
+			//state.disable(GL_CULL_FACE);
+		
 
 			String skin = game.getSkin();
 			game.player.setTexture(skin);

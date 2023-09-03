@@ -49,7 +49,8 @@ public class Player extends Entity {
 		if (!hasGravity) {
 			velY *= friction;
 			if (controller.doJump()) {
-				velY = jumpHeight;
+				double jumpSpeed = inWater ? speed * 10 : speed;
+				velY = jumpHeight * jumpSpeed;
 			}
 			if (controller.doCrouch()) {
 				velY = -jumpHeight;
@@ -74,8 +75,8 @@ public class Player extends Entity {
 		forward *= accel;
 		side *= accel;
 
-		velX += forward * Math.cos(yawRad) + side * Math.cos(yawRad + Math.PI / 2.0);
-		velZ += forward * Math.sin(yawRad) + side * Math.sin(yawRad + Math.PI / 2.0);
+		velX += (forward * Math.cos(yawRad) + side * Math.cos(yawRad + Math.PI / 2.0)) * speed;
+		velZ += (forward * Math.sin(yawRad) + side * Math.sin(yawRad + Math.PI / 2.0)) * speed;
 		velX *= friction;
 		velZ *= friction;
 

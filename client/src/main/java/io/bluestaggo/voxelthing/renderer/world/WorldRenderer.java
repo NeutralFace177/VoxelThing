@@ -118,7 +118,7 @@ public class WorldRenderer {
 		maxZ = z + renderDistance;
 
 		for (int ax = 0; ax < renderRange; ax++) {
-			for (int ay = 0; ay < renderRange; ay++) {
+			for (int ay = 0; ay < renderDistance; ay++) {
 				for (int az = 0; az < renderRange; az++) {
 					int cx = ax + x - renderDistance;
 					int cy = ay + y - renderDistance;

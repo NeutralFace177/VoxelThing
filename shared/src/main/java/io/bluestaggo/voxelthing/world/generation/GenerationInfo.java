@@ -45,8 +45,8 @@ public class GenerationInfo {
 		hasGenerated = true;
 
 		final int baseOctaves = 4;
-		final double baseScale = 250.0;
-		final float baseHeightScale = 8.0f;
+		final double baseScale = 200.0;
+		final float baseHeightScale = 10.0f;
 
 		final int hillOctaves = 3;
 		final double hillScale = 250.0;
@@ -71,9 +71,9 @@ public class GenerationInfo {
 
 				float baseHeight = OpenSimplex2Octaves.noise2(baseSeed, baseOctaves, xx / baseScale, zz / baseScale);
 				float hill = OpenSimplex2Octaves.noise2(hillSeed, hillOctaves, xx / hillScale, zz / hillScale);
-				hill = 1.0f - (float) Math.cos(MathUtil.threshold(hill, hillThresholdMin, hillThresholdMax) * MathUtil.PI_F / 2.0f);
+				hill = 1.0f - (float) Math.sin(MathUtil.threshold(hill, hillThresholdMin, hillThresholdMax) * MathUtil.PI_F / 2.0f);
 
-				float addedBaseHeight = baseHeightScale * MathUtil.lerp(1.0f, hillHeightScaleMod, hill);
+				float addedBaseHeight = baseHeightScale * MathUtil.lerp(2.5f, hillHeightScaleMod, hill);
 				baseHeight = baseHeight * addedBaseHeight + hill * hillHeightScale;
 
 				float cliff = OpenSimplex2Octaves.noise2(cliffSeed, cliffOctaves, xx / cliffScale, zz / cliffScale);
@@ -88,6 +88,7 @@ public class GenerationInfo {
 			}
 		}
 	}
+
 
 	private long splitMix() {
 		long z = (randSeed += 0x9e3779b97f4a7c15L);
@@ -138,6 +139,7 @@ public class GenerationInfo {
 		final int cheeseOctaves = 4;
 		final double cheeseScaleXZ = 100.0;
 		final double cheeseScaleY = 50.0;
+
 
 		for (int x = 0; x < LERP_MAP_LENGTH; x++) {
 			for (int y = 0; y < LERP_MAP_LENGTH; y++) {
