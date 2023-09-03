@@ -61,7 +61,7 @@ public class SaveSelect extends GuiScreen {
 			game.openGui(null);
 		}
 		if (control == newChaosWorldButton) {
-			game.startWorld(2);
+			game.startWorld(3);
 			game.openGui(null);
 		}
 	}

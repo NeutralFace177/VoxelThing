@@ -127,7 +127,7 @@ public class World implements IBlockAccess {
 					int yy = cy * Chunk.LENGTH + y;
 					boolean cave = yy < height && genInfo.getCave(x, yy, z);
 					Block block = null;
-					int waterLevel = worldType < 2 ? 0 : 2;
+					int waterLevel = worldType == 1 ? 0 : 2;
 					if (!cave) {
 						if (yy < height - 4) {
 							block = Block.STONE;

@@ -77,19 +77,27 @@ public class GenerationInfo {
 
 				float s = OpenSimplex2Octaves.noise2(seed, 2, xx / baseScale, zz / baseScale);
 
-				if (type == 2) {
+
+				if (type == 3) {
 					baseHeight = MathUtil.floorMod(baseHeight, s);
 					hill = MathUtil.floorMod(hill, s);
 				}
 
-				
+				float mod = type == 1 ? 2.5f : 5.5f;
 
-				float addedBaseHeight = baseHeightScale * MathUtil.lerp(2.5f, hillHeightScaleMod, hill);
+				float addedBaseHeight = baseHeightScale * MathUtil.lerp(mod, hillHeightScaleMod, hill);
 				baseHeight = baseHeight * addedBaseHeight + hill * hillHeightScale;
 
 				float cliff = OpenSimplex2Octaves.noise2(cliffSeed, cliffOctaves, xx / cliffScale, zz / cliffScale);
 				float cliffHeight = OpenSimplex2Octaves.noise2(cliffHeightSeed, cliffHeightOctaves, xx / cliffHeightScale, zz / cliffHeightScale);
 				cliffHeight = MathUtil.lerp(cliffHeightMin, cliffHeightMax, cliffHeight / 2.0f + 0.5f) * (1.0f - hill * 5.0f);
+
+				if (type == 3) {
+					cliff = MathUtil.floorMod(cliff, s);
+					cliff = MathUtil.floorMod(cliffHeight, s);
+				}
+				
+				
 
 				if (cliff > cliffThreshold) {
 					baseHeight += cliffHeight;
