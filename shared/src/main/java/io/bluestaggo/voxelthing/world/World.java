@@ -156,7 +156,7 @@ public class World implements IBlockAccess {
 							block = Block.SAND;
 						} else if (yy < height && yy > 22) {
 							block = Block.SNOW;
-						} else if (yy < waterLevel) {
+						} else if (yy < waterLevel && worldType == 1) {
 							block = Block.WATER;
 						}
 	
@@ -185,7 +185,7 @@ public class World implements IBlockAccess {
 			if (!chunkExists(x, y, z)) {
 				loadChunkAt(x, y, z);
 
-				if (++loaded >= 25) {
+				if (++loaded >= 250) {
 					return;
 				}
 			}

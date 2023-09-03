@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11C.glClearColor;
 import static org.lwjgl.opengl.GL33C.glClearColor;
 
 public class Game {
@@ -257,9 +258,14 @@ public class Game {
 		if (window.isKeyJustPressed(GLFW_KEY_F6)) {
 			if (++currentSkin >= SKINS.length) currentSkin = 0;
 		}
-
+		boolean a = false;
 		if (window.isKeyJustPressed(GLFW_KEY_ESCAPE)) {
-			window.toggleGrabCursor();
+
+			a = !a;
+			if (a) {
+				openGui(new EscMenu(this));
+			}
+
 		}
 
 		if (window.isKeyJustPressed(GLFW_KEY_E)) {
