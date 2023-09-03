@@ -30,9 +30,6 @@ public class World implements IBlockAccess {
 		worldType = type;
 	}
 
-	int d = 0;
-
-
 	protected void debugChunk() {
 		int range = 1 << ChunkStorage.RADIUS_POW2 >> 1;
 		for (int x = -range; x <= range; x++) {
@@ -259,24 +256,18 @@ public class World implements IBlockAccess {
 	}
 
 	public void onBlockUpdate(int x, int y, int z) {
-		if (d < 100) {
-			d++;
-		} 
-		if (d >= 100) {
-			if (getBlock(x, y, z) == Block.WATER && getBlock(x, y-1, z) == null) {
-						setBlock(x, y-1, z, Block.WATER);
-						// terrible updates blocks around it
-						for (int ux = -1; ux < 2; ux++) {
-							for (int uy = -1; uy < 2; uy++) {
-								for (int uz = -1; uz < 2; uz++) {
-									onBlockUpdate(x + ux, y + uy, z + uz);
-								}
-							}
-						} 
+		if (getBlock(x, y, z) == Block.WATER && getBlock(x, y-1, z) == null) {
+			setBlock(x, y-1, z, Block.WATER);
+			// terrible updates blocks around it
+			for (int ux = -1; ux < 2; ux++) {
+				for (int uy = -1; uy < 2; uy++) {
+					for (int uz = -1; uz < 2; uz++) {
+						onBlockUpdate(x + ux, y + uy, z + uz);
 					}
-			d = 0;
+				}
+			} 
 		}
-		
+
 	}
 
 	
