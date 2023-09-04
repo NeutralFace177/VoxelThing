@@ -49,7 +49,7 @@ public class GenerationInfo {
 		hasGenerated = true;
 
 		final int baseOctaves = 4;
-		final double baseScale = 200.0;
+		final double baseScale = 275.0;
 		final float baseHeightScale = 10.0f;
 
 		final int hillOctaves = 3;

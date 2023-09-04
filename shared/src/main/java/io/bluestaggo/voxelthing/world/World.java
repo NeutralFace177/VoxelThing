@@ -122,6 +122,8 @@ public class World implements IBlockAccess {
 		for (int x = 0; x < Chunk.LENGTH; x++) {
 			for (int z = 0; z < Chunk.LENGTH; z++) {
 				float height = genInfo.getHeight(x, z);
+				float exp = worldType == 1 ? 0.08f : 0.15f;
+				height = height > 20 ? height + (float)Math.pow(Math.exp(height-20),exp)-1 : height;
 				
 				for (int y = 0; y < Chunk.LENGTH; y++) {
 					int yy = cy * Chunk.LENGTH + y;
