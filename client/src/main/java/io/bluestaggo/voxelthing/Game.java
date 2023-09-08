@@ -12,6 +12,7 @@ import io.bluestaggo.voxelthing.world.World;
 import io.bluestaggo.voxelthing.world.block.Block;
 import io.bluestaggo.voxelthing.world.entity.IPlayerController;
 import io.bluestaggo.voxelthing.world.entity.Player;
+import io.bluestaggo.voxelthing.world.generation.GenerationInfo;
 
 import javax.swing.*;
 import java.io.*;
@@ -32,7 +33,7 @@ public class Game {
 
 		try (InputStream stream = Game.class.getResourceAsStream("/version.txt")) {
 			if (stream == null) {
-				version = "dev " + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "?";
+				version = "NF Fork " + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "?";
 			} else {
 				var reader = new BufferedReader(new InputStreamReader(stream));
 				version = reader.readLine();
@@ -50,7 +51,7 @@ public class Game {
 			"floof",
 			"talon"
 	};
-	private int currentSkin = VERSION.contains("dev") || VERSION.equals("???") ? 1 : 0;
+	private int currentSkin = VERSION.contains("dev") || VERSION.equals("???") ? 0 : 0;
 	private boolean thirdPerson;
 	private boolean debugMenu = true;
 	private boolean drawGui = true;
@@ -156,6 +157,7 @@ public class Game {
 		if (isInWorld()) {
 			player.onGameUpdate();
 			player.noClip = window.isKeyDown(GLFW_KEY_Q);
+			
 		}
 
 		if (tickTime >= TICK_RATE) {
@@ -167,7 +169,14 @@ public class Game {
 			if (isInWorld()) {
 				inGameGui.tick();
 				player.tick();
-			}
+				/* 
+				GenerationInfo genInfo = world.genCache.getGenerationAt((int)player.posX, (int)player.posZ);
+				int vx = (int)((Math.round(player.posX/genInfo.gridDist) * 50));
+				int vz = (int)((Math.round(player.posZ/genInfo.gridDist) * 50));
+				System.out.println(vx + "   a    " + vz);
+				genInfo.voronoiSeedsGen(vx,vz);
+				*/
+			}  
 		}
 
 		partialTick = tickTime / TICK_RATE;

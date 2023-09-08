@@ -9,13 +9,14 @@ import io.bluestaggo.voxelthing.world.storage.ChunkStorage;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class World implements IBlockAccess {
 	protected final ChunkStorage chunkStorage;
-	private final GenCache genCache;
+	public final GenCache genCache;
 
 	public final Random random = new Random();
 	public final long seed = random.nextLong();
@@ -23,6 +24,10 @@ public class World implements IBlockAccess {
 	public int worldType = 1;
 
 	public double partialTick;
+
+	public double playerX;
+	public double playerZ;
+
 
 	public World(int type) {
 		chunkStorage = new ChunkStorage(this);
@@ -117,8 +122,11 @@ public class World implements IBlockAccess {
 		Chunk chunk = chunkStorage.newChunkAt(cx, cy, cz);
 		GenerationInfo genInfo = genCache.getGenerationAt(cx, cz);
 
-		genInfo.generate(worldType);
 
+		genInfo.generate(worldType);
+		int vx = (int)((Math.round(cx*32/genInfo.gridDist) * 50));
+		int vz = (int)((Math.round(cz*32/genInfo.gridDist) * 50));
+		genInfo.voronoiSeedsGen(vx, vz);
 		for (int x = 0; x < Chunk.LENGTH; x++) {
 			for (int z = 0; z < Chunk.LENGTH; z++) {
 				float height = genInfo.getHeight(x, z);
@@ -127,6 +135,8 @@ public class World implements IBlockAccess {
 				
 				for (int y = 0; y < Chunk.LENGTH; y++) {
 					int yy = cy * Chunk.LENGTH + y;
+					int xx = cx * Chunk.LENGTH + x;
+					int zz = cz * Chunk.LENGTH + z;
 					boolean cave = yy < height && genInfo.getCave(x, yy, z);
 					Block block = null;
 					//increase water level for chaotic world
@@ -176,11 +186,17 @@ public class World implements IBlockAccess {
 								block = Block.WOOL[Block.WOOL.length-1];
 							}
 						}
-	*/
-						
-						
+	
+					for (int i = 0; i < genInfo.unModVSeeds.size(); i++) {
+						ArrayList<Float> a = genInfo.unModVSeeds.get(i);
+						if (xx == a.get(0) && zz == a.get(1)) {
+							block = Block.WOOL[1];
+						}	
 					}
-
+						
+					
+*/
+				}
 					if (block != null) {
 						chunk.setBlock(x, y, z, block);
 					}
@@ -292,7 +308,8 @@ public class World implements IBlockAccess {
 	
 
 	public void onChunkAdded(int x, int y, int z) {
-		onBlockUpdate(x, y, z);
+
+		
 	}
 
 	public void close() {
