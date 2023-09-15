@@ -172,30 +172,15 @@ public class World implements IBlockAccess {
 							block = Block.WATER;
 						}
 						
-					/* 	if (yy < 40) {
-							float b = genInfo.biome(x, z)[1];
-							float a = genInfo.biome(x, z)[0];
-							if (a > 0.4) {
-								block = Block.WOOL[1];
-							} else {
-								block = Block.WOOL[3];
-							}
-							if (b > 0.4) {
-								block = Block.WOOL[2];
-							} else {
-								block = Block.WOOL[Block.WOOL.length-1];
-							}
+					if (genInfo.genTree(xx, zz) && yy == Math.round(height)) {
+						block = Block.LOG;
+						setBlock(xx, yy+1, zz, Block.LOG);
+						setBlock(xx, yy+2, zz, Block.LOG);
+						setBlock(xx, yy+3, zz, Block.LOG);
+						if (getBlock(xx, yy-1, zz) == null) {
+							setBlock(xx, yy-1, zz, Block.LOG);
 						}
-	
-					for (int i = 0; i < genInfo.unModVSeeds.size(); i++) {
-						ArrayList<Float> a = genInfo.unModVSeeds.get(i);
-						if (xx == a.get(0) && zz == a.get(1)) {
-							block = Block.WOOL[1];
-						}	
 					}
-						
-					
-*/
 				}
 					if (block != null) {
 						chunk.setBlock(x, y, z, block);

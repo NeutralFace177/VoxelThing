@@ -21,9 +21,10 @@ public class GenerationInfo {
 	private final long caveSeed;
 	private final long biomeSeed;
 	private final long secondBiomeSeed;
+	private final long treeSeed;
 
-	public ArrayList<ArrayList<Float>> voronoiSeeds;
-	public ArrayList<ArrayList<Float>> unModVSeeds;
+	public ArrayList<ArrayList<Double>> voronoiSeeds;
+	public ArrayList<ArrayList<Double>> unModVSeeds;
 
 	public int dist = 100;
 	public int gridDist = 50;
@@ -44,6 +45,7 @@ public class GenerationInfo {
 		caveSeed = splitMix();
 		biomeSeed = splitMix();
 		secondBiomeSeed = splitMix();
+		treeSeed = splitMix();
 
 		voronoiSeedsGen(0, 0);
 		
@@ -122,36 +124,33 @@ public class GenerationInfo {
 		}      
 	}
 
-	public float biome(int x, int z) {
-		float scale = 50;
-		float xx = x * scale;
-		float zz = z * scale;
+	public boolean genTree(int x, int z) {
 
-		float seedX = xx + (OpenSimplex2Octaves.noise2(biomeSeed, 1, xx, zz) * (scale /2));
-		float seedZ = zz + (OpenSimplex2Octaves.noise2(secondBiomeSeed, 1, xx, zz) * (scale/2));
+		double baseScale = 1;
 
-		return 1f;
+		float baseHeight = OpenSimplex2Octaves.noise2(treeSeed, 5, x / baseScale, z / baseScale);
+
+		return baseHeight > 0.5;
 	}
 
 	public void voronoiSeedsGen(int x,int z) {
 		
-		ArrayList<ArrayList<Float>> seedArray = new ArrayList<ArrayList<Float>>();
-		ArrayList<ArrayList<Float>> array = new ArrayList<ArrayList<Float>>();
+		ArrayList<ArrayList<Double>> seedArray = new ArrayList<ArrayList<Double>>();
+		ArrayList<ArrayList<Double>> array = new ArrayList<ArrayList<Double>>();
 		int distance = dist + x;
 		int distance2  = dist + z;
 		for (int xx = -distance; xx <= distance; xx += gridDist) {
 			for (int zz = -distance2; zz <= distance2; zz += gridDist) {
 				float seedX = xx + (OpenSimplex2Octaves.noise2(biomeSeed, 1, xx, zz) * (gridDist /2));
 				float seedZ = zz + (OpenSimplex2Octaves.noise2(secondBiomeSeed, 1, xx, zz) * (gridDist/2));
-				seedArray.add(new ArrayList<Float>(Arrays.asList((float)seedX,(float)seedZ)));
-				array.add(new ArrayList<Float>(Arrays.asList((float)xx,(float)zz)));
+				seedArray.add(new ArrayList<Double>(Arrays.asList((double)seedX,(double)seedZ)));
+				array.add(new ArrayList<Double>(Arrays.asList((double)xx,(double)zz)));
 
 			}
 		}
 		voronoiSeeds = seedArray;
 		unModVSeeds = array;
 		System.out.println(voronoiSeeds);
-		//System.out.println("AMAZING SEPERATOR DEBUG KDSAJLKSDJFHLSKDJFHLKSJDFHKSJLD WHATEVER LFKDHSLJDFHKJLDHFKSJDHFLSKJDFLSKJDFHKLSJDFHLKSJDHFKJLSDFHKLJSDFHKSJDFKSJDFKjSDLKJSDLKJSDLKJSDLKJSDKLJSDLKJSDLKJSDLKJSDLKJSDLKJSDLSDKJ");
 	}
 
 	private long splitMix() {
